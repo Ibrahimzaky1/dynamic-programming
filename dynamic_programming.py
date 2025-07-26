@@ -1,56 +1,91 @@
-def foo(n):
-    if n <= 1:
-        return
-    foo(n - 1)
-
-def bar(n):
-    if n <= 1:
-        return
-    bar(n - 2)
-
-def fib(n, memo=None):
-    if memo is None:
-        memo = {}
-    if n in memo:
-        return memo[n]
-    if n <= 2:
-        return 1
-    memo[n] = fib(n - 1, memo) + fib(n - 2, memo)
-    return memo[n]
-
-print(fib(6))
-print(fib(7))
-print(fib(8))
-print(fib(50))
-
-
-
-
-def grid_traveler(m, n, memo=None):
+def can_sum(target_sum, numbers, memo=None):
     if memo is None:
         memo = {}
 
-    key = (m, n)  # using tuple instead of string for keys
+    if target_sum in memo:
+        return memo[target_sum]
+    if target_sum == 0:
+        return True
+    if target_sum < 0:
+        return False
 
-    if key in memo:
-        return memo[key]
-    
-    if m == 1 and n == 1:
-        return 1
-    if m == 0 or n == 0:
-        return 0
+    for num in numbers:
+        remainder = target_sum - num
+        if can_sum(remainder, numbers, memo):
+            memo[target_sum] = True
+            return True
 
-    memo[key] = grid_traveler(m - 1, n, memo) + grid_traveler(m, n - 1, memo)
-    return memo[key]
-
-print(grid_traveler(1, 1))
-print(grid_traveler(2, 3))
-print(grid_traveler(3, 2))
-print(grid_traveler(3, 3))
-print(grid_traveler(18, 18))
+    memo[target_sum] = False
+    return False
 
 
+print(can_sum(7, [2, 3]))          
+print(can_sum(7, [5, 3, 4, 7]))    
+print(can_sum(7, [2, 4]))          
+print(can_sum(8, [2, 3, 5]))       
+print(can_sum(300, [7, 14]))       
 
 
 
 
+
+
+
+
+
+
+def how_sum(target_sum, numbers, memo=None):
+    if memo is None:
+        memo = {}
+
+    if target_sum in memo:
+        return memo[target_sum]
+    if target_sum == 0:
+        return []
+    if target_sum < 0:
+        return None
+
+    for num in numbers:
+        remainder = target_sum - num
+        remainder_result = how_sum(remainder, numbers, memo)
+        if remainder_result is not None:
+            memo[target_sum] = remainder_result + [num]
+            return memo[target_sum]
+
+    memo[target_sum] = None
+    return None
+
+
+print(how_sum(7, [2, 3]))          
+print(how_sum(7, [5, 3, 4, 7]))    
+print(how_sum(7, [2, 4]))          
+print(how_sum(8, [2, 3, 5]))       
+print(how_sum(300, [7, 14]))       
+
+
+
+
+
+
+def best_sum(target_sum, numbers):
+    if target_sum == 0:
+        return []
+    if target_sum < 0:
+        return None
+
+    shortest_combination = None
+
+    for num in numbers:
+        remainder = target_sum - num
+        remainder_combination = best_sum(remainder, numbers)
+        if remainder_combination is not None:
+            combination = remainder_combination + [num]
+            if shortest_combination is None or len(combination) < len(shortest_combination):
+                shortest_combination = combination
+
+    return shortest_combination
+
+
+print(best_sum(7, [5, 3, 4, 7]))     
+print(best_sum(8, [2, 3, 5]))        
+print(best_sum(8, [1, 4, 5]))        
