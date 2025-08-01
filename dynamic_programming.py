@@ -1,54 +1,46 @@
-def how_sum(target_sum, numbers):
-    table = [None] * (target_sum + 1)
-    table[0] = []
+def can_construct(target, word_bank):
+    table = [False] * (len(target) + 1)
+    table[0] = True
 
-    for i in range(target_sum + 1):
-        if table[i] is not None:
-            for num in numbers:
-                if i + num <= target_sum:
-                    table[i + num] = table[i] + [num]
+    for i in range(len(target) + 1):
+        if table[i]:
+            for word in word_bank:
+                if target[i:i + len(word)] == word:
+                    if i + len(word) <= len(target):
+                        table[i + len(word)] = True
 
-    return table[target_sum]
-
-
-print(how_sum(7, [2, 3]))
-print(how_sum(7, [5, 3, 4, 7]))
-print(how_sum(7, [2, 4]))
-print(how_sum(8, [2, 3, 5]))
-print(how_sum(300, [7, 14]))
+    return table[len(target)]
 
 
 
-
+print(can_construct("abcdef", ["ab", "abc", "cd", "def", "abcd"]))             
+print(can_construct("skateboard", ["bo", "rd", "ate", "t", "ska", "sk", "boar"]))  
+print(can_construct("enterapotentpot", ["a", "p", "ent", "enter", "ot", "o", "t"])) 
+print(can_construct("errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrf",
+                    ["e", "ee", "eee", "eeee", "eeeee", "eeeeee"]))            
 
 
 
 
 
+def count_construct(target, word_bank):
+    table = [0] * (len(target) + 1)
+    table[0] = 1
 
+    for i in range(len(target) + 1):
+        if table[i] != 0:
+            for word in word_bank:
+                if target[i:i + len(word)] == word:
+                    if i + len(word) <= len(target):
+                        table[i + len(word)] += table[i]
 
-def best_sum(target_sum, numbers):
-    table = [None] * (target_sum + 1)
-    table[0] = []
-
-    for i in range(target_sum + 1):
-        if table[i] is not None:
-            for num in numbers:
-                if i + num <= target_sum:
-                    combination = table[i] + [num]
-                    if table[i + num] is None or len(combination) < len(table[i + num]):
-                        table[i + num] = combination
-
-    return table[target_sum]
+    return table[len(target)]
 
 
 
-print(best_sum(7, [5, 3, 4, 7]))       
-print(best_sum(8, [2, 3, 5]))          
-print(best_sum(8, [1, 4, 5]))          
-print(best_sum(100, [1, 2, 5, 25]))    
-
-
-
-
-
+print(count_construct("purple", ["purp", "p", "ur", "le", "purpl"]))            
+print(count_construct("abcdef", ["ab", "abc", "cd", "def", "abcd"]))           
+print(count_construct("skateboard", ["bo", "rd", "ate", "t", "ska", "sk", "boar"])) 
+print(count_construct("enterapotentpot", ["a", "p", "ent", "enter", "ot", "o", "t"])) 
+print(count_construct("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeef",
+                      ["e", "ee", "eee", "eeee", "eeeee", "eeeeee"]))           
