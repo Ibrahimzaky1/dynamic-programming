@@ -1,46 +1,56 @@
-def can_construct(target, word_bank):
-    table = [False] * (len(target) + 1)
-    table[0] = True
+def all_construct(target, word_bank):
+    table = [[] for _ in range(len(target) + 1)]
+    table[0] = [[]]
 
     for i in range(len(target) + 1):
-        if table[i]:
-            for word in word_bank:
-                if target[i:i + len(word)] == word:
-                    if i + len(word) <= len(target):
-                        table[i + len(word)] = True
+        for word in word_bank:
+            if target[i:i + len(word)] == word:
+                new_combinations = [sublist + [word] for sublist in table[i]]
+                if i + len(word) <= len(target):
+                    table[i + len(word)].extend(new_combinations)
 
     return table[len(target)]
 
 
 
-print(can_construct("abcdef", ["ab", "abc", "cd", "def", "abcd"]))             
-print(can_construct("skateboard", ["bo", "rd", "ate", "t", "ska", "sk", "boar"]))  
-print(can_construct("enterapotentpot", ["a", "p", "ent", "enter", "ot", "o", "t"])) 
-print(can_construct("errrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrf",
-                    ["e", "ee", "eee", "eeee", "eeeee", "eeeeee"]))            
+print(all_construct('purple', ['purp', 'p', 'ur', 'le', 'purp']))
+print(all_construct("abcdf", ["ab", "abc", "cd", "def", "abcd", "ef", "c"]))
+print(all_construct("skateboard", ["bo", "rd", "ate", "t", "ska", "sk", "boar"]))
+print(all_construct("aaaaaaaaaaz", ["a", "aa", "aaa", "aaaa", "aaaaa"]))  
 
 
 
 
 
-def count_construct(target, word_bank):
-    table = [0] * (len(target) + 1)
-    table[0] = 1
+def contains_duplicate(nums):
+    seen_numbers = set()
+    for num in nums:
+        if num in seen_numbers:
+            return True
+        seen_numbers.add(num)
+    return False
 
-    for i in range(len(target) + 1):
-        if table[i] != 0:
-            for word in word_bank:
-                if target[i:i + len(word)] == word:
-                    if i + len(word) <= len(target):
-                        table[i + len(word)] += table[i]
-
-    return table[len(target)]
+print(contains_duplicate([1, 2, 3, 4]))     
+print(contains_duplicate([1, 2, 3, 1]))     
 
 
 
-print(count_construct("purple", ["purp", "p", "ur", "le", "purpl"]))            
-print(count_construct("abcdef", ["ab", "abc", "cd", "def", "abcd"]))           
-print(count_construct("skateboard", ["bo", "rd", "ate", "t", "ska", "sk", "boar"])) 
-print(count_construct("enterapotentpot", ["a", "p", "ent", "enter", "ot", "o", "t"])) 
-print(count_construct("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeef",
-                      ["e", "ee", "eee", "eeee", "eeeee", "eeeeee"]))           
+def is_anagram(s, t):
+    if len(s) != len(t):
+        return False
+
+    char_counts = [0] * 26 
+
+    for i in range(len(s)):
+        char_counts[ord(s[i]) - ord('a')] += 1
+        char_counts[ord(t[i]) - ord('a')] -= 1
+
+    for count in char_counts:
+        if count != 0:
+            return False
+
+    return True
+
+
+print(is_anagram("anagram", "nagaram"))  
+print(is_anagram("rat", "car"))          
